@@ -1,0 +1,84 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.156
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shamane.Endpoint", "Shamane.Endpoint\Shamane.Endpoint.csproj", "{5442FB25-E958-4163-97F2-B82A6D50ACCE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{5C5794A2-45DB-40E8-9AAE-26970EC5BBFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shamane.Service", "Shamane.Service\Shamane.Service.csproj", "{1FC25E31-AD23-4C65-A0B5-B1024A1E2E16}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataAccess", "DataAccess", "{BD16AD4D-9B80-4911-9BB0-6D03F277C135}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shamane.DataAccess", "Shamane.DataAccess\Shamane.DataAccess.csproj", "{00F9609B-3CBD-40DD-AE0D-061108822020}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shamane.DataAccess.MSSQL", "Shamane.DataAccess.MSSQL\Shamane.DataAccess.MSSQL.csproj", "{C0CCC249-2D9A-4408-859D-3F5030E88AA6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{B5748AF9-681F-463D-8889-3E3FE6C8B04F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shamane.Common", "Shamane.Common\Shamane.Common.csproj", "{248D2A5F-D2B9-41B6-BE94-CEBA2503E5A0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Composition", "Composition", "{8E1D4F06-9048-4FF1-8CD7-D1044B66F95E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shamane.Composition", "Shamane.Composition\Shamane.Composition.csproj", "{5D28AE2B-0153-4981-944B-86207C882673}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shamane.Service.Authentication", "Shamane.Service.Authentication\Shamane.Service.Authentication.csproj", "{07C8BC14-10A9-49F7-9594-E5B512EA9D37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shamane.Domain", "Shamane.Domain\Shamane.Domain.csproj", "{F483AF23-33D6-4CF7-B311-402D738D04F3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5442FB25-E958-4163-97F2-B82A6D50ACCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5442FB25-E958-4163-97F2-B82A6D50ACCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5442FB25-E958-4163-97F2-B82A6D50ACCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5442FB25-E958-4163-97F2-B82A6D50ACCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FC25E31-AD23-4C65-A0B5-B1024A1E2E16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FC25E31-AD23-4C65-A0B5-B1024A1E2E16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FC25E31-AD23-4C65-A0B5-B1024A1E2E16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FC25E31-AD23-4C65-A0B5-B1024A1E2E16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00F9609B-3CBD-40DD-AE0D-061108822020}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00F9609B-3CBD-40DD-AE0D-061108822020}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00F9609B-3CBD-40DD-AE0D-061108822020}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00F9609B-3CBD-40DD-AE0D-061108822020}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0CCC249-2D9A-4408-859D-3F5030E88AA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0CCC249-2D9A-4408-859D-3F5030E88AA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0CCC249-2D9A-4408-859D-3F5030E88AA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0CCC249-2D9A-4408-859D-3F5030E88AA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{248D2A5F-D2B9-41B6-BE94-CEBA2503E5A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{248D2A5F-D2B9-41B6-BE94-CEBA2503E5A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{248D2A5F-D2B9-41B6-BE94-CEBA2503E5A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{248D2A5F-D2B9-41B6-BE94-CEBA2503E5A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D28AE2B-0153-4981-944B-86207C882673}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D28AE2B-0153-4981-944B-86207C882673}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D28AE2B-0153-4981-944B-86207C882673}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D28AE2B-0153-4981-944B-86207C882673}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07C8BC14-10A9-49F7-9594-E5B512EA9D37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07C8BC14-10A9-49F7-9594-E5B512EA9D37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07C8BC14-10A9-49F7-9594-E5B512EA9D37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07C8BC14-10A9-49F7-9594-E5B512EA9D37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F483AF23-33D6-4CF7-B311-402D738D04F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F483AF23-33D6-4CF7-B311-402D738D04F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F483AF23-33D6-4CF7-B311-402D738D04F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F483AF23-33D6-4CF7-B311-402D738D04F3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1FC25E31-AD23-4C65-A0B5-B1024A1E2E16} = {5C5794A2-45DB-40E8-9AAE-26970EC5BBFF}
+		{00F9609B-3CBD-40DD-AE0D-061108822020} = {BD16AD4D-9B80-4911-9BB0-6D03F277C135}
+		{C0CCC249-2D9A-4408-859D-3F5030E88AA6} = {BD16AD4D-9B80-4911-9BB0-6D03F277C135}
+		{248D2A5F-D2B9-41B6-BE94-CEBA2503E5A0} = {B5748AF9-681F-463D-8889-3E3FE6C8B04F}
+		{5D28AE2B-0153-4981-944B-86207C882673} = {8E1D4F06-9048-4FF1-8CD7-D1044B66F95E}
+		{07C8BC14-10A9-49F7-9594-E5B512EA9D37} = {5C5794A2-45DB-40E8-9AAE-26970EC5BBFF}
+		{F483AF23-33D6-4CF7-B311-402D738D04F3} = {B5748AF9-681F-463D-8889-3E3FE6C8B04F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DD73F6FA-ED1B-480C-A50D-FC4D8038D4E8}
+	EndGlobalSection
+EndGlobal

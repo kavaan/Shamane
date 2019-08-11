@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shamane.Common\Shamane.Common.csproj" />
+    <ProjectReference Include="..\Shamane.DataAccess\Shamane.DataAccess.csproj" />
+  </ItemGroup>
+
+</Project>
