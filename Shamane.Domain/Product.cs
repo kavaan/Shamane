@@ -12,5 +12,8 @@ namespace Shamane.Domain
         public virtual Product? Parent { get; set; }
         public string Formula { get; set; }
         public string Description { get; set; }
+        public Guid? EspeciallyForCenterId { get; set; }
+        public virtual Center? EspeciallyForCenter { get; set; }
+        public bool IsActive { get; set; }
     }
 }

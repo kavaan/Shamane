@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shamane.DataAccess.MSSQL.Context;
 
 namespace Shamane.DataAccess.MSSQL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190812070256_AddProduct")]
+    partial class AddProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,44 +103,6 @@ namespace Shamane.DataAccess.MSSQL.Migrations
                     b.HasIndex("ProvinceId");
 
                     b.ToTable("Cities");
-                });
-
-            modelBuilder.Entity("Shamane.Domain.Product", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreatedAt");
-
-                    b.Property<Guid>("CreatedBy");
-
-                    b.Property<string>("Description");
-
-                    b.Property<Guid?>("EspeciallyForCenterId");
-
-                    b.Property<string>("Formula");
-
-                    b.Property<string>("Image");
-
-                    b.Property<bool>("IsActive");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<string>("Name");
-
-                    b.Property<Guid?>("ParentId");
-
-                    b.Property<Guid?>("UpdateBy");
-
-                    b.Property<DateTime?>("UpdatedAt");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EspeciallyForCenterId");
-
-                    b.HasIndex("ParentId");
-
-                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Shamane.Domain.Province", b =>
@@ -262,17 +226,6 @@ namespace Shamane.DataAccess.MSSQL.Migrations
                         .WithMany("Cities")
                         .HasForeignKey("ProvinceId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Shamane.Domain.Product", b =>
-                {
-                    b.HasOne("Shamane.Domain.Center", "EspeciallyForCenter")
-                        .WithMany()
-                        .HasForeignKey("EspeciallyForCenterId");
-
-                    b.HasOne("Shamane.Domain.Product", "Parent")
-                        .WithMany()
-                        .HasForeignKey("ParentId");
                 });
 
             modelBuilder.Entity("Shamane.Domain.UserRole", b =>

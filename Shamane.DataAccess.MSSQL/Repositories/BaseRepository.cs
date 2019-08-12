@@ -52,6 +52,8 @@ namespace Shamane.DataAccess.MSSQL.Repositories
 
         public virtual void Update(Entity entity)
         {
+            ((IBaseEntity)entity).UpdatedAt = DateTime.Now;
+            ((IBaseEntity)entity).UpdateBy = GetUserId();
             dbContext.Entry(entity).State = EntityState.Modified;
         }
 

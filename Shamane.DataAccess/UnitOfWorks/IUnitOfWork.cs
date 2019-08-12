@@ -8,9 +8,10 @@ namespace Shamane.DataAccess.UnitOfWorks
     public interface IUnitOfWork : IDisposable
     {
         ICenterRepository CenterRepository { get; }
-        IProvinceRepository ProvinceRepository{ get; }
-        ICityRepository CityRepository{ get; }
-        IProductRepository ProductRepository{ get; }
+        IProvinceRepository ProvinceRepository { get; }
+        ICityRepository CityRepository { get; }
+        IProductRepository ProductRepository { get; }
+        ICenterProductRepository CenterProductRepository { get; }
         int SaveChanges();
 
     }

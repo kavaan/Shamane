@@ -7,5 +7,7 @@ namespace Shamane.DataAccess.Repositories
 {
     public interface IProductRepository : IRepository<Product>
     {
+        IEnumerable<Product> GetParents(Guid? centerId);
+        IEnumerable<Product> GetSubMenus(Guid parentId, Guid? centerId = null);
     }
 }

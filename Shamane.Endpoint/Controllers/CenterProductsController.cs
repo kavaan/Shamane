@@ -26,6 +26,7 @@ namespace Shamane.Endpoint.Controllers
             centerProductService.Add(centerProductDto);
             return Created("", centerProductDto);
         }
+
         [HttpPut("[action]")]
         public IActionResult Put(CenterProductDto centerProductDto)
         {
@@ -39,6 +40,7 @@ namespace Shamane.Endpoint.Controllers
             centerProductService.Delete(id);
             return NotFound();
         }
+
         [HttpGet("[action]")]
         public IActionResult Get(string centerId, int? from = 0, int? count = 20)
         {

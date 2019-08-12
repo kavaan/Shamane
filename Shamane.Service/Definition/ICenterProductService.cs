@@ -7,9 +7,9 @@ namespace Shamane.Service.Definition
 {
     public interface ICenterProductService
     {
-        void Add(CenterProductDto centerProductDto);
-        void Update(CenterProductDto centerProductDto);
+        CenterProductDto Add(CenterProductDto centerProductDto);
+        CenterProductDto Update(CenterProductDto centerProductDto);
         void Delete(string id);
-        IEnumerable<CenterDto> Get(string centerId, int? from, int? count);
-    }
+        IEnumerable<CenterProductDto> Get(string centerId, bool isParent = true,
+                   string name = null, int? from = 0, int? count = 20)    }
 }

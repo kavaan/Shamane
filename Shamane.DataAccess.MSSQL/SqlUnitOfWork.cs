@@ -15,6 +15,7 @@ namespace Shamane.DataAccess.MSSQL
         private IProvinceRepository provinceRepository;
         private ICityRepository cityRepository;
         private IProductRepository productRepository;
+        private ICenterProductRepository centerProductRepository;
 
         public SqlUnitOfWork(ApplicationDbContext applicationDbContext)
         {
@@ -31,6 +32,10 @@ namespace Shamane.DataAccess.MSSQL
 
         public IProductRepository ProductRepository => productRepository ??
             (productRepository = new ProductRepository(applicationDbContext));
+
+        public ICenterProductRepository CenterProductRepository => centerProductRepository ??
+            (centerProductRepository = new CenterProductRepository(applicationDbContext));
+
 
         public void Dispose()
         {

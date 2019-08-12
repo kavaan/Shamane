@@ -72,6 +72,8 @@ namespace Shamane.Endpoint
             services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<IProvinceFactory, ProvinceFactory>();
             services.AddScoped<ICityFactory, CityFactory>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IProductFactory, ProductFactory>();
 
 
 
@@ -167,10 +169,10 @@ namespace Shamane.Endpoint
                         .AllowCredentials());
             });
 
-           // services.AddAntiforgery(x => x.HeaderName = "X-XSRF-TOKEN");
+            // services.AddAntiforgery(x => x.HeaderName = "X-XSRF-TOKEN");
             services.AddMvc(options =>
             {
-              //  options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                //  options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

@@ -19,5 +19,14 @@ namespace Shamane.Service.Extensions
             }
             return result;
         }
+
+        public static bool IsValidGuid(this string value)
+        {
+            if (value.HasValue() && Guid.TryParse(value, out var guid))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

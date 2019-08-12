@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shamane.DataAccess.MSSQL.Context;
 
 namespace Shamane.DataAccess.MSSQL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190812080726_AddProductEntity")]
+    partial class AddProductEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,7 +116,7 @@ namespace Shamane.DataAccess.MSSQL.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<Guid?>("EspeciallyForCenterId");
+                    b.Property<Guid>("EspeciallyForCenterId");
 
                     b.Property<string>("Formula");
 
@@ -268,7 +270,8 @@ namespace Shamane.DataAccess.MSSQL.Migrations
                 {
                     b.HasOne("Shamane.Domain.Center", "EspeciallyForCenter")
                         .WithMany()
-                        .HasForeignKey("EspeciallyForCenterId");
+                        .HasForeignKey("EspeciallyForCenterId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Shamane.Domain.Product", "Parent")
                         .WithMany()

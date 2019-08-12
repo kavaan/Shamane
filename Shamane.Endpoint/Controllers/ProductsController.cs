@@ -25,6 +25,15 @@ namespace Shamane.Endpoint.Controllers
             productService.Add(productDto);
             return Created("", productDto);
         }
+
+        [HttpPost("{centerId}/SpecialProduct")]
+        public IActionResult PostSpecialProduct(string centerId, ProductDto productDto)
+        {
+            productDto.EspeciallyForCenterId = centerId;
+            productService.AddSpcial(productDto);
+            return Created("", productDto);
+        }
+
         [HttpPut("[action]")]
         public IActionResult Put(ProductDto productDto)
         {
@@ -32,22 +41,60 @@ namespace Shamane.Endpoint.Controllers
             return Ok(productDto);
         }
 
-        [HttpDelete("[action]")]
+        [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
             productService.Delete(id);
             return NoContent();
         }
+
         [HttpGet("[action]")]
-        public IActionResult Get(string name = null, long? price = null,
+        public IActionResult Get(string name = null,
             int? from = 0, int? count = 20)
         {
-            var products = productService.Get(name, price, from, count);
-            if (products == null && products.Count() > 0)
+            var products = productService.GetParent();
+            if (products != null && products.Count() > 0)
             {
                 return Ok(products);
             }
             return NotFound();
         }
+
+        [HttpGet("{parentId}/Childs")]
+        public IActionResult GetSubMenu(string parentId,string centerId = null, string name = null,
+            int? from = 0, int? count = 20)
+        {
+            var products = productService.GetSubMenu(parentId,centerId);
+            if (products != null && products.Count() > 0)
+            {
+                return Ok(products);
+            }
+            return NotFound();
+        }
+
+        [HttpGet("{centerId}/Special")]
+        public IActionResult Get(string centerId, string name = null,
+            int? from = 0, int? count = 20)
+        {
+            var products = productService.GetSpecialParent(centerId);
+            if (products != null && products.Count() > 0)
+            {
+                return Ok(products);
+            }
+            return NotFound();
+        }
+
+        [HttpGet("{centerId}/Special/{parentId}")]
+        public IActionResult Get(string centerId, string parentId, string name = null,
+                int? from = 0, int? count = 20)
+        {
+            var products = productService.GetSpecialSubMenu(centerId, parentId);
+            if (products != null && products.Count() > 0)
+            {
+                return Ok(products);
+            }
+            return NotFound();
+        }
+
     }
 }

@@ -19,6 +19,8 @@ namespace Shamane.DataAccess.MSSQL.Context
         public virtual DbSet<Center> Centers { get; set; }
         public virtual DbSet<Province> Provinces { get; set; }
         public virtual DbSet<City> Cities { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<CenterProduct> CenterProducts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -73,7 +75,14 @@ namespace Shamane.DataAccess.MSSQL.Context
             {
                 entity.HasQueryFilter(x => !x.IsDeleted);
             });
-
+            builder.Entity<Product>(entity =>
+            {
+                entity.HasQueryFilter(x => !x.IsDeleted);
+            });
+            builder.Entity<CenterProduct>(entity =>
+            {
+                entity.HasQueryFilter(x => !x.IsDeleted);
+            });
         }
 
     }
