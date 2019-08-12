@@ -10,6 +10,7 @@ namespace Shamane.DataAccess.UnitOfWorks
         ICenterRepository CenterRepository { get; }
         IProvinceRepository ProvinceRepository{ get; }
         ICityRepository CityRepository{ get; }
+        IProductRepository ProductRepository{ get; }
         int SaveChanges();
 
     }

@@ -10,6 +10,9 @@ namespace Shamane.Service.Definition
         void Add(ProductDto productDto);
         void Update(ProductDto productDto);
         void Delete(string id);
-        IEnumerable<ProductDto> Get(string name, long? price, int? from, int? count);
+        ProductDto Get(string id);
+        IEnumerable<ProductDto> GetSubMenu(string parentId, int? from, int? count);
+        IEnumerable<ProductDto> GetParent(int? from, int? count);
+        IEnumerable<ProductDto> SearchSubMenu(string name, int? from, int? count);
     }
 }

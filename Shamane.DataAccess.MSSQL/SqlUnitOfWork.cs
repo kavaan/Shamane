@@ -11,9 +11,11 @@ namespace Shamane.DataAccess.MSSQL
     public class SqlUnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext applicationDbContext;
-        private  ICenterRepository centerRepository;
-        private  IProvinceRepository provinceRepository;
-        private  ICityRepository cityRepository;
+        private ICenterRepository centerRepository;
+        private IProvinceRepository provinceRepository;
+        private ICityRepository cityRepository;
+        private IProductRepository productRepository;
+
         public SqlUnitOfWork(ApplicationDbContext applicationDbContext)
         {
             this.applicationDbContext = applicationDbContext;
@@ -21,10 +23,14 @@ namespace Shamane.DataAccess.MSSQL
         public ICenterRepository CenterRepository => centerRepository ??
             (centerRepository = new CenterRepository(applicationDbContext));
 
-        public IProvinceRepository ProvinceRepository=> provinceRepository??
+        public IProvinceRepository ProvinceRepository => provinceRepository ??
             (provinceRepository = new ProvinceRepository(applicationDbContext));
-        public ICityRepository CityRepository=> cityRepository??
+
+        public ICityRepository CityRepository => cityRepository ??
             (cityRepository = new CityRepository(applicationDbContext));
+
+        public IProductRepository ProductRepository => productRepository ??
+            (productRepository = new ProductRepository(applicationDbContext));
 
         public void Dispose()
         {
