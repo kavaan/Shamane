@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Shamane.Domain.Conts;
 using Shamane.Service.Definition;
-using Shamane.Service.Definition.Conts;
 using Shamane.Service.Definition.Dto;
 
 namespace Shamane.Endpoint.Controllers
@@ -28,39 +28,67 @@ namespace Shamane.Endpoint.Controllers
             return Created("", order);
         }
 
-        [HttpPost("Accept")]
+        [HttpPost("{id}/Accept")]
         public IActionResult Accept(string id)
         {
             orderService.Accept(id);
             return Ok();
         }
 
-        [HttpPost("Reject")]
-        public IActionResult Reject(string id)
+        [HttpPost("{id}/Reject")]
+        public IActionResult Reject(string id, string reason)
         {
-            orderService.Reject(id);
+            orderService.Reject(id, reason);
             return Ok();
         }
 
-        [HttpPost("Finish")]
-        public IActionResult Finish(string id)
+        [HttpPost("{id}/SendToDelivery")]
+        public IActionResult SendToDelivery(string id)
         {
-            orderService.Finish(id);
+            orderService.SendToDelivery(id);
             return Ok();
         }
 
-        [HttpGet("Status")]
-        public IActionResult Status(string id)
+        [HttpPost("{id}/Complete")]
+        public IActionResult Complete(string id)
+        {
+            orderService.Complete(id);
+            return Ok();
+        }
+
+        [HttpGet("{code}/Status")]
+        public IActionResult StatusByCode(string code)
+        {
+            var orderStatus = orderService.GetStatusByCode(code);
+            return Ok(orderStatus);
+        }
+
+        [HttpGet("{id}/Info")]
+        public IActionResult StatusById(string id)
         {
             var orderStatus = orderService.GetStatus(id);
             return Ok(orderStatus);
         }
-        [HttpGet("[action]")]
-        public IActionResult Get(string centerId, OrderStaus orderStaus = OrderStaus.Null,
+
+        [HttpGet("/api/{centerId}/[controller]")]
+        public IActionResult Get(string centerId, string orderCode = null,
+            OrderStaus orderStaus = OrderStaus.Null,
             DateTime? fromDate = null, DateTime? toDate = null,
             int? from = 0, int? count = 20)
         {
-            var orders = orderService.Get(centerId, orderStaus, fromDate, toDate, from, count);
+            var orders = orderService.Get(centerId, null, orderCode, orderStaus,
+                fromDate, toDate, from, count);
+            if (orders != null && orders.Count() > 0)
+            {
+                return Ok(orders);
+            }
+            return NotFound();
+        }
+
+        [HttpGet("{id}/Details")]
+        public IActionResult GetDetails(string id)
+        {
+            var orders = orderService.GetOrderDetails(id);
             if (orders != null && orders.Count() > 0)
             {
                 return Ok(orders);

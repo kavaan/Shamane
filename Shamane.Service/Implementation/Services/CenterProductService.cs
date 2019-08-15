@@ -1,11 +1,11 @@
-﻿using Shamane.DataAccess.UnitOfWorks;
+﻿using Shamane.Common.Extensions;
+using Shamane.DataAccess.UnitOfWorks;
 using Shamane.Service.Definition;
 using Shamane.Service.Definition.Dto;
 using Shamane.Service.Definition.Factories;
-using Shamane.Service.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace Shamane.Service.Implementation.Services
 {
@@ -13,11 +13,14 @@ namespace Shamane.Service.Implementation.Services
     {
         private readonly ICenterProductFactory centerProductFactory;
         private readonly IUnitOfWork unitOfWork;
+        private readonly ICenterService centerService;
         public CenterProductService(IUnitOfWork unitOfWork,
-            ICenterProductFactory centerProductFactory)
+            ICenterProductFactory centerProductFactory,
+            ICenterService centerService)
         {
             this.centerProductFactory = centerProductFactory;
             this.unitOfWork = unitOfWork;
+            this.centerService = centerService;
         }
         public CenterProductDto Add(CenterProductDto centerProductDto)
         {
@@ -34,14 +37,61 @@ namespace Shamane.Service.Implementation.Services
             unitOfWork.SaveChanges();
         }
 
-        public IEnumerable<CenterProductDto> Get(string centerId, bool isParent = true,
+        public IEnumerable<CenterProductDto> Get(string centerId, string parentId = null,
             string name = null, int? from = 0, int? count = 20)
         {
-            var entities = unitOfWork.CenterProductRepository.Get(centerId,
-                isParent, name, from, count);
+            Guid? parentGuid = null;
+            if (parentId.IsValidGuid())
+            {
+                parentGuid = parentId.ToGuid();
+            }
+            var entities = unitOfWork.CenterProductRepository.Get(centerId.ToGuid(),
+               parentGuid, name, from, count);
             var dtos = centerProductFactory.CreateDto(entities);
 
             return dtos;
+        }
+
+        public Dictionary<Guid,long> GetPrice(IEnumerable<Guid> centerProductIds)
+        {
+            var result = unitOfWork.CenterProductRepository.GetPrice(centerProductIds);
+            return result;
+        }
+
+        public CenterProductTreeDto GetTrees(string centerId)
+        {
+            var centerDto = centerService.Get(centerId.ToGuid());
+            var result = new CenterProductTreeDto()
+            {
+                CenterId = centerId,
+                CenterName = centerDto.Title,
+                ProductTrees = new List<CenterProductTreeDetial>()
+            };
+            var products = unitOfWork.
+                CenterProductRepository.GetTrees(centerId.ToGuid());
+            var parents = products.Where(x => x.Product.ParentId == null);
+            foreach (var item in parents)
+            {
+                var cp = products.Where(x => x.Product.ParentId == item.ProductId);
+                result.ProductTrees.Add(new CenterProductTreeDetial()
+                {
+                    Id = item.Id.ToString(),
+                    Name = item.Product.Name,
+                    Products = cp.Select(x => new CenterProductDto()
+                    {
+                        Id = x.Id.ToString(),
+                        CenterId = x.CenterId.ToString(),
+                        CenterTitle = centerDto.Title,
+                        Description = x.Description,
+                        Image = x.Image,
+                        IsParent = false,
+                        Price = x.Price,
+                        ProductId = x.ProductId.ToString(),
+                        ProductName = x.Product.Name
+                    })
+                });
+            }
+            return result;
         }
 
         public CenterProductDto Update(CenterProductDto centerProductDto)

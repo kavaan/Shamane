@@ -1,4 +1,5 @@
-﻿using Shamane.Domain;
+﻿using Shamane.Common.Extensions;
+using Shamane.Domain;
 using Shamane.Service.Definition.Dto;
 using Shamane.Service.Definition.Factories;
 using System;
@@ -12,6 +13,13 @@ namespace Shamane.Service.Implementation.Factories
         public override CenterDto CreateDto(Center entity)
         {
             var dto =  base.CreateDto(entity);
+            if (entity.City !=null)
+            {
+                dto.City = entity.City.Name;
+                dto.CityId = entity.CityId.ToString();
+                dto.ProvinceId = entity.City.ProvinceId.ToString();
+                dto.Province = entity.City.Province.Name;
+            }
             switch (dto.CenterType)
             {
                 case CenterType.Null:
@@ -50,6 +58,17 @@ namespace Shamane.Service.Implementation.Factories
                     break;
             }
             return dto;
+        }
+        public override Center CreateEntity(CenterDto dto)
+        {
+            var result  = base.CreateEntity(dto);
+
+            if (dto.City.HasValue())
+            {
+                result.CityId = dto.CityId.ToGuid();
+            }
+
+            return result;
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Shamane.Domain
         public string Tellphone { get; set; }
         public string Mail { get; set; }
         public Guid CityId { get; set; }
+        public virtual City City { get; set; }
         public string Address { get; set; }
         public DateTime ContractStartDate { get; set; }
         public DateTime ContractEndDate { get; set; }

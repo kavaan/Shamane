@@ -13,7 +13,10 @@ namespace Shamane.Service.Definition.Dto
         public string CenterTypeString { get; set; }
         public string Tellphone { get; set; }
         public string Mail { get; set; }
-        public Guid CityId { get; set; }
+        public string CityId { get; set; }
+        public string City { get; set; }
+        public string Province{ get; set; }
+        public string ProvinceId { get; set; }
         public string Address { get; set; }
         public DateTime ContractStartDate { get; set; }
         public DateTime ContractEndDate { get; set; }

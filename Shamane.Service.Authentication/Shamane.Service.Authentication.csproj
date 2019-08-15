@@ -9,12 +9,14 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.2.6" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Shamane.DataAccess.MSSQL\Shamane.DataAccess.MSSQL.csproj" />
     <ProjectReference Include="..\Shamane.DataAccess\Shamane.DataAccess.csproj" />
     <ProjectReference Include="..\Shamane.Domain\Shamane.Domain.csproj" />
+    <ProjectReference Include="..\Shamane.Service\Shamane.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>

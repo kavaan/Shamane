@@ -34,5 +34,16 @@ namespace Shamane.Domain
         public virtual ICollection<UserRole> UserRoles { get; set; }
 
         public virtual ICollection<UserToken> UserTokens { get; set; }
+
+        public string Mobile { get; set; }
+        public DateTime? BirthDate { get; set; }
+
+        public Guid CityId { get; set; }
+        public virtual City City { get; set; }
+
+        public string Address { get; set; }
+        public string Name { get; set; }
+        public string Family { get; set; }
+        public string Image { get; set; }
     }
 }

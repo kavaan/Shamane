@@ -21,12 +21,12 @@ namespace Shamane.DataAccess.MSSQL.Context
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<CenterProduct> CenterProducts { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             // it should be placed here, otherwise it will rewrite the following settings!
             base.OnModelCreating(builder);
-
             // Custom application mappings
             builder.Entity<User>(entity =>
             {
@@ -35,13 +35,11 @@ namespace Shamane.DataAccess.MSSQL.Context
                 entity.Property(e => e.Password).IsRequired();
                 entity.Property(e => e.SerialNumber).HasMaxLength(450);
             });
-
             builder.Entity<Role>(entity =>
             {
                 entity.Property(e => e.Name).HasMaxLength(450).IsRequired();
                 entity.HasIndex(e => e.Name).IsUnique();
             });
-
             builder.Entity<UserRole>(entity =>
             {
                 entity.HasKey(e => new { e.UserId, e.RoleId });
@@ -52,7 +50,6 @@ namespace Shamane.DataAccess.MSSQL.Context
                 entity.HasOne(d => d.Role).WithMany(p => p.UserRoles).HasForeignKey(d => d.RoleId);
                 entity.HasOne(d => d.User).WithMany(p => p.UserRoles).HasForeignKey(d => d.UserId);
             });
-
             builder.Entity<UserToken>(entity =>
             {
                 entity.HasOne(ut => ut.User)
@@ -62,7 +59,6 @@ namespace Shamane.DataAccess.MSSQL.Context
                 entity.Property(ut => ut.RefreshTokenIdHash).HasMaxLength(450).IsRequired();
                 entity.Property(ut => ut.RefreshTokenIdHashSource).HasMaxLength(450);
             });
-
             builder.Entity<Center>(entity =>
             {
                 entity.HasQueryFilter(x => !x.IsDeleted);
@@ -83,7 +79,14 @@ namespace Shamane.DataAccess.MSSQL.Context
             {
                 entity.HasQueryFilter(x => !x.IsDeleted);
             });
+            builder.Entity<Order>(entity =>
+            {
+                entity.HasQueryFilter(x => !x.IsDeleted);
+            });
+            builder.Entity<OrderDetail>(entity =>
+            {
+                entity.HasQueryFilter(x => !x.IsDeleted);
+            });
         }
-
     }
 }

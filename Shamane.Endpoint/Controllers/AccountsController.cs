@@ -10,7 +10,9 @@ using Newtonsoft.Json.Linq;
 using Shamane.DataAccess.UnitOfWorks;
 using Shamane.Domain;
 using Shamane.Service.Authentication.Common;
+using Shamane.Service.Authentication.Dtos;
 using Shamane.Service.Authentication.Service;
+using Shamane.Service.Definition.Dto;
 
 namespace Shamane.Endpoint.Controllers
 {
@@ -46,9 +48,15 @@ namespace Shamane.Endpoint.Controllers
             _tokenFactoryService.CheckArgumentIsNull(nameof(tokenFactoryService));
         }
 
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Register(UserRegisterDto user)
+        {
+            var result = await _usersService.Register(user);
+            return Created("", result);
+        }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Login(User loginUser)
+        public async Task<IActionResult> Login(UserLoginDto loginUser)
         {
             if (loginUser == null)
             {

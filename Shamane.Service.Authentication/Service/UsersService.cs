@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Shamane.Common.Extensions;
 using Shamane.DataAccess.UnitOfWorks;
 using Shamane.Domain;
 using Shamane.Service.Authentication.Common;
+using Shamane.Service.Definition.Dto;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -20,6 +22,7 @@ namespace Shamane.Service.Authentication.Service
         Task<User> GetCurrentUserAsync();
         int GetCurrentUserId();
         Task<(bool Succeeded, string Error)> ChangePasswordAsync(User user, string currentPassword, string newPassword);
+        Task<UserRegisterDto> Register(UserRegisterDto user);
     }
 
     public class UsersService : IUsersService
@@ -106,6 +109,40 @@ namespace Shamane.Service.Authentication.Service
             // user.SerialNumber = Guid.NewGuid().ToString("N"); // To force other logins to expire.
             await _uow.SaveChangesAsync();
             return (true, string.Empty);
+        }
+
+        public async Task<UserRegisterDto> Register(UserRegisterDto userDto)
+        {
+            if (IsExistsMobile(userDto.Mobile))
+            {
+                throw new Exception("Exists");
+            }
+            var userRoles = new UserRole()
+            {
+                RoleId = 2
+            };
+            var user = new User()
+            {
+                Address = userDto.Address,
+                BirthDate = userDto.BirthDate,
+                CityId = userDto.CityId.ToGuid(),
+                Family = userDto.Family,
+                Name = userDto.Name,
+                IsActive = true,
+                Mobile = userDto.Mobile,
+                Password = _securityService.GetSha256Hash(userDto.Password),
+                Username = userDto.Mobile,
+                Image = userDto.Image,
+                UserRoles = new List<UserRole>() { userRoles }
+            };
+            var result = await _users.AddAsync(user);
+            var saveChnage = await _uow.SaveChangesAsync();
+            return userDto;
+        }
+
+        public bool IsExistsMobile(string mobile)
+        {
+            return false;
         }
     }
 }

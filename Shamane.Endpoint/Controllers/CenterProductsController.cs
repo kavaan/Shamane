@@ -42,14 +42,27 @@ namespace Shamane.Endpoint.Controllers
         }
 
         [HttpGet("[action]")]
-        public IActionResult Get(string centerId, int? from = 0, int? count = 20)
+        public IActionResult Get(string centerId, string parentId = null,
+            string name = null, int? from = 0, int? count = 20)
         {
-            var centerProducts = centerProductService.Get(centerId, from, count);
+            var centerProducts = centerProductService.Get(centerId, parentId, name, from, count);
             if (centerProducts != null && centerProducts.Count() > 0)
             {
                 return Ok(centerProducts);
             }
             return NotFound();
         }
+
+        [HttpGet("{centerId}/Trees")]
+        public IActionResult Get(string centerId)
+        {
+            var centerProducts = centerProductService.GetTrees(centerId);
+            if (centerProducts != null && centerProducts.ProductTrees.Any())
+            {
+                return Ok(centerProducts);
+            }
+            return NotFound();
+        }
+
     }
 }

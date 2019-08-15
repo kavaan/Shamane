@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Shamane.Domain;
@@ -10,7 +11,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace Shamane.Service.Authentication.Service
 {
     public class JwtTokensData
@@ -33,13 +33,16 @@ namespace Shamane.Service.Authentication.Service
         private readonly IOptionsSnapshot<BearerTokensOptions> _configuration;
         private readonly IRolesService _rolesService;
         private readonly ILogger<TokenFactoryService> _logger;
+        private readonly IConfiguration configuration;
 
         public TokenFactoryService(
             ISecurityService securityService,
             IRolesService rolesService,
             IOptionsSnapshot<BearerTokensOptions> configuration,
-            ILogger<TokenFactoryService> logger)
+            ILogger<TokenFactoryService> logger,
+            IConfiguration configuration_)
         {
+            this.configuration = configuration_;
             _securityService = securityService;
             _securityService.CheckArgumentIsNull(nameof(_securityService));
 
@@ -131,22 +134,20 @@ namespace Shamane.Service.Authentication.Service
 
         private async Task<(string AccessToken, IEnumerable<Claim> Claims)> createAccessTokenAsync(User user)
         {
-            var claims = new List<Claim>
-            {
-                // Unique Id for all Jwt tokes
-                new Claim(JwtRegisteredClaimNames.Jti, _securityService.CreateCryptographicallySecureGuid().ToString(), ClaimValueTypes.String, _configuration.Value.Issuer),
-                // Issuer
-                new Claim(JwtRegisteredClaimNames.Iss, _configuration.Value.Issuer, ClaimValueTypes.String, _configuration.Value.Issuer),
-                // Issued at
-                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64, _configuration.Value.Issuer),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString(), ClaimValueTypes.String, _configuration.Value.Issuer),
-                new Claim(ClaimTypes.Name, user.Username, ClaimValueTypes.String, _configuration.Value.Issuer),
-                new Claim("DisplayName", user.DisplayName, ClaimValueTypes.String, _configuration.Value.Issuer),
-                // to invalidate the cookie
-                new Claim(ClaimTypes.SerialNumber, user.SerialNumber, ClaimValueTypes.String, _configuration.Value.Issuer),
-                // custom data
-                new Claim(ClaimTypes.UserData, user.Id.ToString(), ClaimValueTypes.String, _configuration.Value.Issuer)
-            };
+            var claims = new List<Claim>();
+            // Unique Id for all Jwt tokes
+            claims.Add(new Claim(JwtRegisteredClaimNames.Jti, _securityService.CreateCryptographicallySecureGuid().ToString(), ClaimValueTypes.String, _configuration.Value.Issuer));
+            // Issuer
+            claims.Add(new Claim(JwtRegisteredClaimNames.Iss, _configuration.Value.Issuer, ClaimValueTypes.String, _configuration.Value.Issuer));
+            // Issued at
+            claims.Add(new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64, _configuration.Value.Issuer));
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString(), ClaimValueTypes.String, _configuration.Value.Issuer));
+            claims.Add(new Claim(ClaimTypes.Name, user.Username, ClaimValueTypes.String, _configuration.Value.Issuer));
+            claims.Add(new Claim("DisplayName", user.Mobile, ClaimValueTypes.String, _configuration.Value.Issuer));
+            // to invalidate the cookie
+            //claims.Add(new Claim(ClaimTypes.SerialNumber, user.SerialNumber, ClaimValueTypes.String, _configuration.Value.Issuer));
+            // custom data
+            claims.Add(new Claim(ClaimTypes.UserData, user.Id.ToString(), ClaimValueTypes.String, _configuration.Value.Issuer));
 
             // add roles
             var roles = await _rolesService.FindUserRolesAsync(user.Id);

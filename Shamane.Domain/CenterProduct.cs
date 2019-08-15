@@ -13,6 +13,5 @@ namespace Shamane.Domain
         public string Image { get; set; }
         public long Price { get; set; }
         public string Description { get; set; }
-
     }
 }

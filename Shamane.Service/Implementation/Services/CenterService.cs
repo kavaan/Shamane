@@ -1,8 +1,10 @@
-﻿using Shamane.DataAccess.UnitOfWorks;
+﻿using Shamane.Common.Extensions;
+using Shamane.DataAccess.UnitOfWorks;
+using Shamane.Domain;
+using Shamane.Domain.Conts;
 using Shamane.Service.Definition;
 using Shamane.Service.Definition.Dto;
 using Shamane.Service.Definition.Factories;
-using Shamane.Service.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -34,16 +36,32 @@ namespace Shamane.Service.Implementation.Services
             unitOfWork.SaveChanges();
         }
 
-        public IEnumerable<CenterDto> Get(string name, string cityId, int? from, int? count)
-        {
-            var centers = unitOfWork.CenterRepository.Get();
-            var centersDtos = centerFatory.CreateDto(centers);
-            return centersDtos;
-        }
+        //public IEnumerable<CenterDto> Get(string name, string cityId, int? from, int? count)
+        //{
+        //    var centers = unitOfWork.CenterRepository.Get(name, cityId);
+        //    var centersDtos = centerFatory.CreateDto(centers);
+        //    return centersDtos;
+        //}
 
         public CenterDto Get(Guid id)
         {
-            throw new NotImplementedException();
+            var model = unitOfWork.CenterRepository.Get(id);
+            var dto = centerFatory.CreateDto(model);
+            return dto;
+        }
+
+        public IEnumerable<CenterDto> Get(string title = null, string provinceId = null,
+            string cityId = null, CenterType centerType = CenterType.Null,
+            DeliveryType deliveryType = DeliveryType.Null,
+            CenterOrderBy centerOrderBy = CenterOrderBy.Null,
+            int? from = 0, int? count = 20)
+        {
+            var centers = unitOfWork.CenterRepository.Get(title,
+                provinceId.ToNullableGuid(), cityId.ToNullableGuid(),
+                centerType, deliveryType, centerOrderBy,
+                from, count);
+            var centersDtos = centerFatory.CreateDto(centers);
+            return centersDtos;
         }
 
         public CenterDto Update(CenterDto centerDto)

@@ -1,7 +1,7 @@
-﻿using Shamane.Domain;
+﻿using Shamane.Common.Extensions;
+using Shamane.Domain;
 using Shamane.Service.Definition.Dto;
 using Shamane.Service.Definition.Factories;
-using Shamane.Service.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,7 +18,7 @@ namespace Shamane.Service.Implementation.Factories
             {
                 result.CenterId = dto.CenterId.ToGuid();
             }
-            if (dto.ProductId.HasValue())
+            if (dto.ProductId.IsValidGuid())
             {
                 result.ProductId = dto.ProductId.ToGuid();
             }

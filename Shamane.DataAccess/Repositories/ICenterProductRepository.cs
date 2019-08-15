@@ -9,5 +9,7 @@ namespace Shamane.DataAccess.Repositories
     {
         IEnumerable<CenterProduct> Get(Guid centerId,
             Guid? parentId = null, string name = null, int? from = 0, int? count = 20);
+        IEnumerable<CenterProduct> GetTrees(Guid guid);
+        Dictionary<Guid,long> GetPrice(IEnumerable<Guid> centerProductIds);
     }
 }

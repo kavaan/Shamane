@@ -15,5 +15,7 @@ namespace Shamane.Domain
         public Guid? EspeciallyForCenterId { get; set; }
         public virtual Center? EspeciallyForCenter { get; set; }
         public bool IsActive { get; set; }
+        public virtual IEnumerable<Product> Childs { get; set; }
+
     }
 }

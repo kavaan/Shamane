@@ -1,8 +1,8 @@
-﻿using Shamane.DataAccess.UnitOfWorks;
+﻿using Shamane.Common.Extensions;
+using Shamane.DataAccess.UnitOfWorks;
 using Shamane.Service.Definition;
 using Shamane.Service.Definition.Dto;
 using Shamane.Service.Definition.Factories;
-using Shamane.Service.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text;

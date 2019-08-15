@@ -19,12 +19,12 @@ using Shamane.DataAccess.MSSQL;
 using Shamane.DataAccess.MSSQL.Context;
 using Shamane.DataAccess.UnitOfWorks;
 using Shamane.Endpoint.Models;
-using Shamane.Endpoint.Util.Security;
 using Shamane.Service.Authentication.Service;
 using Shamane.Service.Definition;
 using Shamane.Service.Definition.Factories;
 using Shamane.Service.Implementation.Factories;
 using Shamane.Service.Implementation.Services;
+using BearerTokensOptions = Shamane.Service.Authentication.Service.BearerTokensOptions;
 
 namespace Shamane.Endpoint
 {
@@ -42,6 +42,18 @@ namespace Shamane.Endpoint
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.Configure<BearerTokensOptions>(Configuration);
+
+            services.AddOptions<BearerTokensOptions>()
+                    .Bind(Configuration.GetSection("BearerTokens"))
+                    .Validate(bearerTokens =>
+                    {
+                        return bearerTokens.AccessTokenExpirationMinutes < bearerTokens.RefreshTokenExpirationMinutes;
+                    }, "RefreshTokenExpirationMinutes is less than AccessTokenExpirationMinutes. Obtaining new tokens using the refresh token should happen only if the access token has expired.");
+                        services.AddOptions<ApiSettings>()
+                                .Bind(Configuration.GetSection("ApiSettings"));
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "My API", Version = "v1" });
@@ -57,29 +69,26 @@ namespace Shamane.Endpoint
                 });
             });
 
-            services.AddOptions<Util.Security.BearerTokensOptions>()
-                    .Bind(Configuration.GetSection("BearerTokens"))
-                    .Validate(bearerTokens =>
-                    {
-                        return bearerTokens.AccessTokenExpirationMinutes < bearerTokens.RefreshTokenExpirationMinutes;
-                    }, "RefreshTokenExpirationMinutes is less than AccessTokenExpirationMinutes. Obtaining new tokens using the refresh token should happen only if the access token has expired.");
-            services.AddOptions<ApiSettings>()
-                    .Bind(Configuration.GetSection("ApiSettings"));
 
             services.AddScoped<IUnitOfWork, SqlUnitOfWork>();
             services.AddScoped<ICenterService, CenterService>();
             services.AddScoped<ICenterFatory, CenterFactory>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<IProvinceFactory, ProvinceFactory>();
             services.AddScoped<ICityFactory, CityFactory>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductFactory, ProductFactory>();
+            services.AddScoped<ICenterProductFactory, CenterProductFactory>();
+            services.AddScoped<ICenterProductService, CenterProductService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderFactory, OrderFactory>();
 
 
 
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            //services.AddScoped<IAntiForgeryCookieService, AntiForgeryCookieService>();
+            services.AddScoped<IAntiForgeryCookieService, AntiForgeryCookieService>();
             services.AddScoped<IAuthenticationUnitOfWork, ApplicationDbContext>();
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IRolesService, RolesService>();

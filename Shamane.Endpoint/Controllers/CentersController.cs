@@ -5,8 +5,9 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Shamane.Domain;
+using Shamane.Domain.Conts;
 using Shamane.Service.Definition;
-using Shamane.Service.Definition.Conts;
 using Shamane.Service.Definition.Dto;
 
 namespace Shamane.Endpoint.Controllers
@@ -24,8 +25,8 @@ namespace Shamane.Endpoint.Controllers
         [HttpPost("[action]")]
         public IActionResult Post(CenterDto centerDto)
         {
-            centerService.Add(centerDto);
-            return Created("", centerDto);
+            var result = centerService.Add(centerDto);
+            return Created("", result);
         }
 
         [HttpPut("[action]")]
@@ -41,11 +42,14 @@ namespace Shamane.Endpoint.Controllers
             return NoContent();
         }
         [HttpGet("[action]")]
-        public IActionResult Get(string name = null, string cityId = null,
+        public IActionResult Get(string title = null, string provinceId = null,
+            string cityId = null, CenterType centerType = CenterType.Null,
+            DeliveryType deliveryType = DeliveryType.Null,
             int? from = 0, int? count = 20,
             CenterOrderBy centerOrderBy = CenterOrderBy.Null)
         {
-            var centersDto = centerService.Get(name, cityId, from, count);
+            var centersDto = centerService.Get(title, provinceId, cityId,
+                centerType, deliveryType, centerOrderBy, from, count);
             if (centersDto != null && centersDto.Count() > 0)
             {
                 return Ok(centersDto);
