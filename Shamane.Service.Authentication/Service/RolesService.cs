@@ -12,9 +12,10 @@ namespace Shamane.Service.Authentication.Service
 {
     public interface IRolesService
     {
-        Task<List<Role>> FindUserRolesAsync(int userId);
-        Task<bool> IsUserInRoleAsync(int userId, string roleName);
+        Task<List<Role>> FindUserRolesAsync(Guid userId);
+        Task<bool> IsUserInRoleAsync(Guid userId, string roleName);
         Task<List<User>> FindUsersInRoleAsync(string roleName);
+        Task<Role> GetRole(string roleName);
     }
 
     public class RolesService : IRolesService
@@ -32,7 +33,7 @@ namespace Shamane.Service.Authentication.Service
             _users = _uow.Set<User>();
         }
 
-        public Task<List<Role>> FindUserRolesAsync(int userId)
+        public Task<List<Role>> FindUserRolesAsync(Guid userId)
         {
             var userRolesQuery = from role in _roles
                                  from userRoles in role.UserRoles
@@ -42,7 +43,7 @@ namespace Shamane.Service.Authentication.Service
             return userRolesQuery.OrderBy(x => x.Name).ToListAsync();
         }
 
-        public async Task<bool> IsUserInRoleAsync(int userId, string roleName)
+        public async Task<bool> IsUserInRoleAsync(Guid userId, string roleName)
         {
             var userRolesQuery = from role in _roles
                                  where role.Name == roleName
@@ -61,6 +62,13 @@ namespace Shamane.Service.Authentication.Service
                                    select user.UserId;
             return _users.Where(user => roleUserIdsQuery.Contains(user.Id))
                          .ToListAsync();
+        }
+
+        public Task<Role> GetRole(string roleName)
+        {
+            var _role = _roles.FirstOrDefaultAsync(x=>x.Name==roleName);
+
+            return _role;
         }
     }
 }

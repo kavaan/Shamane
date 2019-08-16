@@ -301,9 +301,8 @@ namespace Shamane.DataAccess.MSSQL.Migrations
 
             modelBuilder.Entity("Shamane.Domain.Role", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -319,9 +318,8 @@ namespace Shamane.DataAccess.MSSQL.Migrations
 
             modelBuilder.Entity("Shamane.Domain.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Address");
 
@@ -355,6 +353,8 @@ namespace Shamane.DataAccess.MSSQL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CityId");
+
                     b.HasIndex("Username")
                         .IsUnique();
 
@@ -363,9 +363,9 @@ namespace Shamane.DataAccess.MSSQL.Migrations
 
             modelBuilder.Entity("Shamane.Domain.UserRole", b =>
                 {
-                    b.Property<int>("UserId");
+                    b.Property<Guid>("UserId");
 
-                    b.Property<int>("RoleId");
+                    b.Property<Guid>("RoleId");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -395,7 +395,7 @@ namespace Shamane.DataAccess.MSSQL.Migrations
                     b.Property<string>("RefreshTokenIdHashSource")
                         .HasMaxLength(450);
 
-                    b.Property<int>("UserId");
+                    b.Property<Guid>("UserId");
 
                     b.HasKey("Id");
 
@@ -462,6 +462,14 @@ namespace Shamane.DataAccess.MSSQL.Migrations
                     b.HasOne("Shamane.Domain.Product", "Parent")
                         .WithMany("Childs")
                         .HasForeignKey("ParentId");
+                });
+
+            modelBuilder.Entity("Shamane.Domain.User", b =>
+                {
+                    b.HasOne("Shamane.Domain.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Shamane.Domain.UserRole", b =>

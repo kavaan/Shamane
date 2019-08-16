@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using Shamane.Common.Extensions;
 using Shamane.DataAccess.UnitOfWorks;
 using Shamane.Domain;
 using Shamane.Service.Authentication.Common;
@@ -20,13 +21,13 @@ namespace Shamane.Endpoint.Controllers
     [ApiController]
     public class AccountsController : ControllerBase
     {
-        private readonly IUsersService _usersService;
+        private readonly IUserService _usersService;
         private readonly ITokenStoreService _tokenStoreService;
         private readonly IAuthenticationUnitOfWork _uow;
         private readonly IAntiForgeryCookieService _antiforgery;
         private readonly ITokenFactoryService _tokenFactoryService;
         public AccountsController(
-            IUsersService usersService,
+            IUserService usersService,
             ITokenStoreService tokenStoreService,
             ITokenFactoryService tokenFactoryService,
             IAuthenticationUnitOfWork uow,
@@ -48,7 +49,7 @@ namespace Shamane.Endpoint.Controllers
             _tokenFactoryService.CheckArgumentIsNull(nameof(tokenFactoryService));
         }
 
-        [HttpPost("[action]")]
+        [HttpPost("")]
         public async Task<IActionResult> Register(UserRegisterDto user)
         {
             var result = await _usersService.Register(user);
@@ -74,7 +75,6 @@ namespace Shamane.Endpoint.Controllers
             await _uow.SaveChangesAsync();
 
             _antiforgery.RegenerateAntiForgeryCookies(result.Claims);
-
             return Ok(new { access_token = result.AccessToken, refresh_token = result.RefreshToken });
         }
 
@@ -110,7 +110,7 @@ namespace Shamane.Endpoint.Controllers
 
             // The Jwt implementation does not support "revoke OAuth token" (logout) by design.
             // Delete the user's tokens from the database (revoke its bearer token)
-            await _tokenStoreService.RevokeUserBearerTokensAsync(userIdValue, refreshToken);
+            await _tokenStoreService.RevokeUserBearerTokensAsync(userIdValue.ToGuid(), refreshToken);
             await _uow.SaveChangesAsync();
 
             _antiforgery.DeleteAntiForgeryCookies();

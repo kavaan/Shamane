@@ -30,4 +30,8 @@
     <ProjectReference Include="..\Shamane.Domain\Shamane.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

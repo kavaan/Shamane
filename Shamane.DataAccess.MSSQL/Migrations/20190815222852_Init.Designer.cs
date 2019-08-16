@@ -10,8 +10,8 @@ using Shamane.DataAccess.MSSQL.Context;
 namespace Shamane.DataAccess.MSSQL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190812080726_AddProductEntity")]
-    partial class AddProductEntity
+    [Migration("20190815222852_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -74,7 +74,43 @@ namespace Shamane.DataAccess.MSSQL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CityId");
+
                     b.ToTable("Centers");
+                });
+
+            modelBuilder.Entity("Shamane.Domain.CenterProduct", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("CenterId");
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<Guid>("CreatedBy");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Image");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<long>("Price");
+
+                    b.Property<Guid>("ProductId");
+
+                    b.Property<Guid?>("UpdateBy");
+
+                    b.Property<DateTime?>("UpdatedAt");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CenterId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CenterProducts");
                 });
 
             modelBuilder.Entity("Shamane.Domain.City", b =>
@@ -105,6 +141,104 @@ namespace Shamane.DataAccess.MSSQL.Migrations
                     b.ToTable("Cities");
                 });
 
+            modelBuilder.Entity("Shamane.Domain.Order", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("AcceptedBy");
+
+                    b.Property<DateTime?>("AcceptedDateTime");
+
+                    b.Property<string>("Address");
+
+                    b.Property<Guid>("CenterId");
+
+                    b.Property<Guid>("CompletedBy");
+
+                    b.Property<DateTime?>("CompletedDateTime");
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<Guid>("CreatedBy");
+
+                    b.Property<long?>("DeliveryPrice");
+
+                    b.Property<string>("Description");
+
+                    b.Property<long?>("Discount");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("OrderCode");
+
+                    b.Property<int>("OrderDeliverType");
+
+                    b.Property<int>("OrderStaus");
+
+                    b.Property<DateTime>("RegisterdAt");
+
+                    b.Property<Guid>("RegisterdBy");
+
+                    b.Property<string>("RejectReason");
+
+                    b.Property<Guid>("RejectedBy");
+
+                    b.Property<DateTime?>("RejectedDateTime");
+
+                    b.Property<DateTime?>("SendToDelivertDateTime");
+
+                    b.Property<Guid>("SendToDeliveryBy");
+
+                    b.Property<bool>("TargetAddressIsUserProfileAddress");
+
+                    b.Property<long?>("Tax");
+
+                    b.Property<long?>("TotalPrice");
+
+                    b.Property<Guid?>("UpdateBy");
+
+                    b.Property<DateTime?>("UpdatedAt");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CenterId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Shamane.Domain.OrderDetail", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("CenterProductId");
+
+                    b.Property<int>("Count");
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<Guid>("CreatedBy");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<Guid?>("OrderId");
+
+                    b.Property<long>("UnitPrice");
+
+                    b.Property<Guid?>("UpdateBy");
+
+                    b.Property<DateTime?>("UpdatedAt");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CenterProductId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderDetail");
+                });
+
             modelBuilder.Entity("Shamane.Domain.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -116,7 +250,7 @@ namespace Shamane.DataAccess.MSSQL.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<Guid>("EspeciallyForCenterId");
+                    b.Property<Guid?>("EspeciallyForCenterId");
 
                     b.Property<string>("Formula");
 
@@ -169,9 +303,8 @@ namespace Shamane.DataAccess.MSSQL.Migrations
 
             modelBuilder.Entity("Shamane.Domain.Role", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -187,15 +320,28 @@ namespace Shamane.DataAccess.MSSQL.Migrations
 
             modelBuilder.Entity("Shamane.Domain.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Address");
+
+                    b.Property<DateTime?>("BirthDate");
+
+                    b.Property<Guid>("CityId");
 
                     b.Property<string>("DisplayName");
+
+                    b.Property<string>("Family");
+
+                    b.Property<string>("Image");
 
                     b.Property<bool>("IsActive");
 
                     b.Property<DateTimeOffset?>("LastLoggedIn");
+
+                    b.Property<string>("Mobile");
+
+                    b.Property<string>("Name");
 
                     b.Property<string>("Password")
                         .IsRequired();
@@ -209,6 +355,8 @@ namespace Shamane.DataAccess.MSSQL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CityId");
+
                     b.HasIndex("Username")
                         .IsUnique();
 
@@ -217,9 +365,9 @@ namespace Shamane.DataAccess.MSSQL.Migrations
 
             modelBuilder.Entity("Shamane.Domain.UserRole", b =>
                 {
-                    b.Property<int>("UserId");
+                    b.Property<Guid>("UserId");
 
-                    b.Property<int>("RoleId");
+                    b.Property<Guid>("RoleId");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -249,13 +397,34 @@ namespace Shamane.DataAccess.MSSQL.Migrations
                     b.Property<string>("RefreshTokenIdHashSource")
                         .HasMaxLength(450);
 
-                    b.Property<int>("UserId");
+                    b.Property<Guid>("UserId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("UserTokens");
+                });
+
+            modelBuilder.Entity("Shamane.Domain.Center", b =>
+                {
+                    b.HasOne("Shamane.Domain.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Shamane.Domain.CenterProduct", b =>
+                {
+                    b.HasOne("Shamane.Domain.Center", "Center")
+                        .WithMany()
+                        .HasForeignKey("CenterId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Shamane.Domain.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Shamane.Domain.City", b =>
@@ -266,16 +435,43 @@ namespace Shamane.DataAccess.MSSQL.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("Shamane.Domain.Order", b =>
+                {
+                    b.HasOne("Shamane.Domain.Center", "Center")
+                        .WithMany()
+                        .HasForeignKey("CenterId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Shamane.Domain.OrderDetail", b =>
+                {
+                    b.HasOne("Shamane.Domain.CenterProduct", "CenterProduct")
+                        .WithMany()
+                        .HasForeignKey("CenterProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Shamane.Domain.Order")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("OrderId");
+                });
+
             modelBuilder.Entity("Shamane.Domain.Product", b =>
                 {
                     b.HasOne("Shamane.Domain.Center", "EspeciallyForCenter")
                         .WithMany()
-                        .HasForeignKey("EspeciallyForCenterId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EspeciallyForCenterId");
 
                     b.HasOne("Shamane.Domain.Product", "Parent")
-                        .WithMany()
+                        .WithMany("Childs")
                         .HasForeignKey("ParentId");
+                });
+
+            modelBuilder.Entity("Shamane.Domain.User", b =>
+                {
+                    b.HasOne("Shamane.Domain.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Shamane.Domain.UserRole", b =>

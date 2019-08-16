@@ -13,10 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Shamane.Common\Shamane.Common.csproj" />
     <ProjectReference Include="..\Shamane.DataAccess.MSSQL\Shamane.DataAccess.MSSQL.csproj" />
     <ProjectReference Include="..\Shamane.DataAccess\Shamane.DataAccess.csproj" />
     <ProjectReference Include="..\Shamane.Domain\Shamane.Domain.csproj" />
-    <ProjectReference Include="..\Shamane.Service\Shamane.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>

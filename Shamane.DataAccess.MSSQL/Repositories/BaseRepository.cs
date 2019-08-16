@@ -5,7 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
+using System.Threading;
 
 namespace Shamane.DataAccess.MSSQL.Repositories
 {
@@ -13,6 +16,7 @@ namespace Shamane.DataAccess.MSSQL.Repositories
     {
         protected DbSet<Entity> set;
         protected DbContext dbContext;
+        //private readonly ClaimsPrincipal _principal;
 
         public BaseRepository(DbContext dbContext)
         {
@@ -57,12 +61,13 @@ namespace Shamane.DataAccess.MSSQL.Repositories
             dbContext.Entry(entity).State = EntityState.Modified;
         }
 
-        public static Guid GetUserId()
+        public Guid GetUserId()
         {
-            //var identity = (System.Security.Claims.ClaimsPrincipal)System.Threading.Thread.CurrentPrincipal;
-            //var principal = System.Threading.Thread.CurrentPrincipal as System.Security.Claims.ClaimsPrincipal;
-            //var userId = identity.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault();
-            var userId = "459cf6c3-3026-4694-9b9b-0d44ef56dd85";
+            var threadUserId = Thread.GetData(Thread.GetNamedDataSlot("userId"));
+            var currentPrincipal = Thread.CurrentPrincipal;
+            var identity = (System.Security.Claims.ClaimsPrincipal)System.Threading.Thread.CurrentPrincipal;
+            var principal = System.Threading.Thread.CurrentPrincipal as System.Security.Claims.ClaimsPrincipal;
+            var userId = identity.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault();
             return Guid.Parse(userId);
         }
     }

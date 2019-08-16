@@ -13,29 +13,32 @@ using System.Threading.Tasks;
 
 namespace Shamane.Service.Authentication.Service
 {
-    public interface IUsersService
+    public interface IUserService
     {
-        Task<string> GetSerialNumberAsync(int userId);
+        Task<string> GetSerialNumberAsync(Guid userId);
         Task<User> FindUserAsync(string username, string password);
-        Task<User> FindUserAsync(int userId);
-        Task UpdateUserLastActivityDateAsync(int userId);
+        Task<User> FindUserAsync(Guid userId);
+        Task UpdateUserLastActivityDateAsync(Guid userId);
         Task<User> GetCurrentUserAsync();
-        int GetCurrentUserId();
-        Task<(bool Succeeded, string Error)> ChangePasswordAsync(User user, string currentPassword, string newPassword);
+        string GetCurrentUserId();
+        Task<(bool Succeeded, string Error)> ChangePasswordAsync(User user, string currentPassword,
+            string newPassword);
         Task<UserRegisterDto> Register(UserRegisterDto user);
+        User Get(string id);
     }
 
-    public class UsersService : IUsersService
+    public class UserService : IUserService
     {
         private readonly IAuthenticationUnitOfWork _uow;
         private readonly DbSet<User> _users;
         private readonly ISecurityService _securityService;
         private readonly IHttpContextAccessor _contextAccessor;
-
-        public UsersService(
+        private readonly IRolesService rolesService;
+        public UserService(
             IAuthenticationUnitOfWork uow,
             ISecurityService securityService,
-            IHttpContextAccessor contextAccessor)
+            IHttpContextAccessor contextAccessor,
+            IRolesService rolesService)
         {
             _uow = uow;
             _uow.CheckArgumentIsNull(nameof(_uow));
@@ -47,9 +50,10 @@ namespace Shamane.Service.Authentication.Service
 
             _contextAccessor = contextAccessor;
             _contextAccessor.CheckArgumentIsNull(nameof(_contextAccessor));
+            this.rolesService = rolesService;
         }
 
-        public Task<User> FindUserAsync(int userId)
+        public Task<User> FindUserAsync(Guid userId)
         {
             return _users.FindAsync(userId);
         }
@@ -60,13 +64,13 @@ namespace Shamane.Service.Authentication.Service
             return _users.FirstOrDefaultAsync(x => x.Username == username && x.Password == passwordHash);
         }
 
-        public async Task<string> GetSerialNumberAsync(int userId)
+        public async Task<string> GetSerialNumberAsync(Guid userId)
         {
             var user = await FindUserAsync(userId);
             return user.SerialNumber;
         }
 
-        public async Task UpdateUserLastActivityDateAsync(int userId)
+        public async Task UpdateUserLastActivityDateAsync(Guid userId)
         {
             var user = await FindUserAsync(userId);
             if (user.LastLoggedIn != null)
@@ -83,18 +87,18 @@ namespace Shamane.Service.Authentication.Service
             await _uow.SaveChangesAsync();
         }
 
-        public int GetCurrentUserId()
+        public string GetCurrentUserId()
         {
             var claimsIdentity = _contextAccessor.HttpContext.User.Identity as ClaimsIdentity;
             var userDataClaim = claimsIdentity?.FindFirst(ClaimTypes.UserData);
-            var userId = userDataClaim?.Value;
-            return string.IsNullOrWhiteSpace(userId) ? 0 : int.Parse(userId);
+            var _userId = userDataClaim?.Value;
+            return _userId;
         }
 
         public Task<User> GetCurrentUserAsync()
         {
             var userId = GetCurrentUserId();
-            return FindUserAsync(userId);
+            return FindUserAsync(userId.ToGuid());
         }
 
         public async Task<(bool Succeeded, string Error)> ChangePasswordAsync(User user, string currentPassword, string newPassword)
@@ -117,9 +121,10 @@ namespace Shamane.Service.Authentication.Service
             {
                 throw new Exception("Exists");
             }
+            var normalUserRole = await rolesService.GetRole(CustomRoles.User);
             var userRoles = new UserRole()
             {
-                RoleId = 2
+                 RoleId = normalUserRole.Id
             };
             var user = new User()
             {
@@ -133,7 +138,8 @@ namespace Shamane.Service.Authentication.Service
                 Password = _securityService.GetSha256Hash(userDto.Password),
                 Username = userDto.Mobile,
                 Image = userDto.Image,
-                UserRoles = new List<UserRole>() { userRoles }
+                UserRoles = new List<UserRole>() { userRoles },
+                SerialNumber = Guid.NewGuid().ToString("N")
             };
             var result = await _users.AddAsync(user);
             var saveChnage = await _uow.SaveChangesAsync();
@@ -143,6 +149,11 @@ namespace Shamane.Service.Authentication.Service
         public bool IsExistsMobile(string mobile)
         {
             return false;
+        }
+
+        public User Get(string id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

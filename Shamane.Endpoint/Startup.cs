@@ -24,6 +24,7 @@ using Shamane.Service.Definition;
 using Shamane.Service.Definition.Factories;
 using Shamane.Service.Implementation.Factories;
 using Shamane.Service.Implementation.Services;
+using Swashbuckle.AspNetCore.Swagger;
 using BearerTokensOptions = Shamane.Service.Authentication.Service.BearerTokensOptions;
 
 namespace Shamane.Endpoint
@@ -57,6 +58,13 @@ namespace Shamane.Endpoint
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info { Title = "My API", Version = "v1" });
+                c.AddSecurityDefinition("oauth2", new ApiKeyScheme
+                {
+                    Description = "Standard Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
+                    In = "header",
+                    Name = "Authorization",
+                    Type = "apiKey"
+                });
             });
             services.AddCors(options =>
             {
@@ -73,7 +81,6 @@ namespace Shamane.Endpoint
             services.AddScoped<IUnitOfWork, SqlUnitOfWork>();
             services.AddScoped<ICenterService, CenterService>();
             services.AddScoped<ICenterFatory, CenterFactory>();
-            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<IProvinceFactory, ProvinceFactory>();
             services.AddScoped<ICityFactory, CityFactory>();
@@ -90,7 +97,7 @@ namespace Shamane.Endpoint
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IAntiForgeryCookieService, AntiForgeryCookieService>();
             services.AddScoped<IAuthenticationUnitOfWork, ApplicationDbContext>();
-            services.AddScoped<IUsersService, UsersService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRolesService, RolesService>();
             services.AddSingleton<ISecurityService, SecurityService>();
             services.AddScoped<IDbInitializerService, DbInitializerService>();

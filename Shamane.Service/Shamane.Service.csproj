@@ -8,6 +8,13 @@
     <ProjectReference Include="..\Shamane.Common\Shamane.Common.csproj" />
     <ProjectReference Include="..\Shamane.DataAccess.MSSQL\Shamane.DataAccess.MSSQL.csproj" />
     <ProjectReference Include="..\Shamane.DataAccess\Shamane.DataAccess.csproj" />
+    <ProjectReference Include="..\Shamane.Service.Authentication\Shamane.Service.Authentication.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
+      <HintPath>..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.http.abstractions\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

@@ -1,11 +1,14 @@
-﻿using Shamane.Common.Extensions;
+﻿using Microsoft.AspNetCore.Http;
+using Shamane.Common.Extensions;
 using Shamane.DataAccess.UnitOfWorks;
 using Shamane.Service.Definition;
 using Shamane.Service.Definition.Dto;
 using Shamane.Service.Definition.Factories;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
+using System.Threading;
 
 namespace Shamane.Service.Implementation.Services
 {
@@ -14,7 +17,9 @@ namespace Shamane.Service.Implementation.Services
         private readonly IUnitOfWork unitOfWork;
         private readonly IProvinceFactory provinceFactory;
         private readonly ICityFactory cityFactory;
-        public AddressService(IUnitOfWork unitOfWork, ICityFactory cityFactory,
+
+        public AddressService(IUnitOfWork unitOfWork,
+            ICityFactory cityFactory,
             IProvinceFactory provinceFactory)
         {
             this.unitOfWork = unitOfWork;
@@ -68,6 +73,7 @@ namespace Shamane.Service.Implementation.Services
 
         public IEnumerable<CityDto> GetCities()
         {
+
             var cities = unitOfWork.CityRepository.GetCities();
             var dtos = cityFactory.CreateDto(cities);
             return dtos;

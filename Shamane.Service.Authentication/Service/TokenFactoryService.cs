@@ -145,7 +145,7 @@ namespace Shamane.Service.Authentication.Service
             claims.Add(new Claim(ClaimTypes.Name, user.Username, ClaimValueTypes.String, _configuration.Value.Issuer));
             claims.Add(new Claim("DisplayName", user.Mobile, ClaimValueTypes.String, _configuration.Value.Issuer));
             // to invalidate the cookie
-            //claims.Add(new Claim(ClaimTypes.SerialNumber, user.SerialNumber, ClaimValueTypes.String, _configuration.Value.Issuer));
+            claims.Add(new Claim(ClaimTypes.SerialNumber, user.SerialNumber, ClaimValueTypes.String, _configuration.Value.Issuer));
             // custom data
             claims.Add(new Claim(ClaimTypes.UserData, user.Id.ToString(), ClaimValueTypes.String, _configuration.Value.Issuer));
 

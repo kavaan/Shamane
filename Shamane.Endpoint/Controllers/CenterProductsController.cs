@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Shamane.Service.Authentication.Service;
 using Shamane.Service.Definition;
 using Shamane.Service.Definition.Dto;
 

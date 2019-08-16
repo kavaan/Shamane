@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Shamane.Common.Extensions;
 using Shamane.DataAccess.UnitOfWorks;
 using Shamane.Domain;
 using Shamane.Service.Authentication.Common;
@@ -14,14 +15,15 @@ namespace Shamane.Service.Authentication.Service
     public interface ITokenStoreService
     {
         Task AddUserTokenAsync(UserToken userToken);
-        Task AddUserTokenAsync(User user, string refreshTokenSerial, string accessToken, string refreshTokenSourceSerial);
-        Task<bool> IsValidTokenAsync(string accessToken, int userId);
+        Task AddUserTokenAsync(User user, string refreshTokenSerial, string accessToken,
+            string refreshTokenSourceSerial);
+        Task<bool> IsValidTokenAsync(string accessToken, Guid userId);
         Task DeleteExpiredTokensAsync();
         Task<UserToken> FindTokenAsync(string refreshTokenValue);
         Task DeleteTokenAsync(string refreshTokenValue);
         Task DeleteTokensWithSameRefreshTokenSourceAsync(string refreshTokenIdHashSource);
-        Task InvalidateUserTokensAsync(int userId);
-        Task RevokeUserBearerTokensAsync(string userIdValue, string refreshTokenValue);
+        Task InvalidateUserTokensAsync(Guid userId);
+        Task RevokeUserBearerTokensAsync(Guid userIdValue, string refreshTokenValue);
     }
 
     public class TokenStoreService : ITokenStoreService
@@ -63,7 +65,8 @@ namespace Shamane.Service.Authentication.Service
             _tokens.Add(userToken);
         }
 
-        public async Task AddUserTokenAsync(User user, string refreshTokenSerial, string accessToken, string refreshTokenSourceSerial)
+        public async Task AddUserTokenAsync(User user, string refreshTokenSerial, 
+            string accessToken, string refreshTokenSourceSerial)
         {
             var now = DateTimeOffset.UtcNow;
             var token = new UserToken
@@ -112,15 +115,13 @@ namespace Shamane.Service.Authentication.Service
                          });
         }
 
-        public async Task RevokeUserBearerTokensAsync(string userIdValue, string refreshTokenValue)
+        public async Task RevokeUserBearerTokensAsync(Guid userIdValue, string refreshTokenValue)
         {
-            if (!string.IsNullOrWhiteSpace(userIdValue) && int.TryParse(userIdValue, out int userId))
-            {
                 if (_configuration.Value.AllowSignoutAllUserActiveClients)
                 {
-                    await InvalidateUserTokensAsync(userId);
+                    await InvalidateUserTokensAsync(userIdValue);
                 }
-            }
+            
 
             if (!string.IsNullOrWhiteSpace(refreshTokenValue))
             {
@@ -152,7 +153,7 @@ namespace Shamane.Service.Authentication.Service
             return _tokens.Include(x => x.User).FirstOrDefaultAsync(x => x.RefreshTokenIdHash == refreshTokenIdHash);
         }
 
-        public async Task InvalidateUserTokensAsync(int userId)
+        public async Task InvalidateUserTokensAsync(Guid userId)
         {
             await _tokens.Where(x => x.UserId == userId)
                          .ForEachAsync(userToken =>
@@ -161,7 +162,7 @@ namespace Shamane.Service.Authentication.Service
                          });
         }
 
-        public async Task<bool> IsValidTokenAsync(string accessToken, int userId)
+        public async Task<bool> IsValidTokenAsync(string accessToken, Guid userId)
         {
             var accessTokenHash = _securityService.GetSha256Hash(accessToken);
             var userToken = await _tokens.FirstOrDefaultAsync(

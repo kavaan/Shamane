@@ -42,7 +42,7 @@ namespace Shamane.Service.Authentication.Service
             {
                 using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
                 {
-                   // context.Database.Migrate();
+                    // context.Database.Migrate();
                 }
             }
         }
@@ -62,17 +62,42 @@ namespace Shamane.Service.Authentication.Service
                         context.Add(userRole);
                         context.SaveChanges();
                     }
-
+                    if (!context.Provinces.Any())
+                    {
+                        var province = new Province
+                        {
+                            Name = "مازندران",
+                            Id = Guid.Parse("470ed19a-c478-4654-8cc3-5f53cfd0681a"),
+                            IsActive = true
+                        };
+                        context.Add(province);
+                        context.SaveChanges();
+                        var city = new City
+                        {
+                            Name = "بابل",
+                            Id = Guid.Parse("13357ed9-40d8-4420-9103-12eb20c0e020"),
+                            ProvinceId = Guid.Parse("470ed19a-c478-4654-8cc3-5f53cfd0681a"),
+                            IsActive = true
+                        };
+                        context.Add(city);
+                        context.SaveChanges();
+                    }
                     // Add Admin user
                     if (!context.Users.Any())
                     {
                         var adminUser = new User
                         {
                             Username = "09109117923",
+                            Name = "کیوان",
+                            Family = "دمیرچی",
+                            Address = "موزیرج، ارشاد 11، ابوذر 6، پلاک 7",
+                            BirthDate = new DateTime(1995, 08, 02),
+                            CityId = Guid.Parse("13357ed9-40d8-4420-9103-12eb20c0e020"),
+                            Mobile = "09109117923",
                             DisplayName = "k1",
                             IsActive = true,
                             LastLoggedIn = null,
-                            Password = _securityService.GetSha256Hash("1234"),
+                            Password = _securityService.GetSha256Hash("k1374"),
                             SerialNumber = Guid.NewGuid().ToString("N")
                         };
                         context.Add(adminUser);

@@ -1,6 +1,7 @@
 ﻿using Shamane.Common.Extensions;
 using Shamane.DataAccess.UnitOfWorks;
 using Shamane.Domain.Conts;
+using Shamane.Service.Authentication.Service;
 using Shamane.Service.Definition;
 using Shamane.Service.Definition.Dto;
 using Shamane.Service.Definition.Factories;
@@ -32,7 +33,7 @@ namespace Shamane.Service.Implementation.Services
         public void Accept(string id)
         {
             var order = unitOfWork.OrderRepository.Get(id.ToGuid());
-            order.AcceptedBy = userService.GetUserId().ToGuid();
+            order.AcceptedBy = userService.GetCurrentUserId().ToGuid();
             order.AcceptedDateTime = DateTime.Now;
             order.OrderStaus = OrderStaus.Accepted;
             unitOfWork.OrderRepository.Update(order);
@@ -53,12 +54,12 @@ namespace Shamane.Service.Implementation.Services
                 totlaPrice += (orderDetail.Count) * unitPrice;
                 orderDetail.UnitPrice = unitPrice;
             }
-            orderEntity.RegisterdBy = userService.GetUserId().ToGuid();
+            orderEntity.RegisterdBy = userService.GetCurrentUserId().ToGuid();
             orderEntity.TotalPrice = totlaPrice;
             orderEntity.OrderStaus = OrderStaus.NoState;
             if (orderEntity.TargetAddressIsUserProfileAddress)
             {
-                orderEntity.Address = userService.Get(userService.GetUserId()).Address;
+                orderEntity.Address = userService.Get(userService.GetCurrentUserId()).Address;
             }
             unitOfWork.OrderRepository.Add(orderEntity);
             unitOfWork.SaveChanges();
@@ -69,7 +70,7 @@ namespace Shamane.Service.Implementation.Services
         public void Complete(string id)
         {
             var order = unitOfWork.OrderRepository.Get(id.ToGuid());
-            order.CompletedBy = userService.GetUserId().ToGuid();
+            order.CompletedBy = userService.GetCurrentUserId().ToGuid();
             order.CompletedDateTime = DateTime.Now;
             order.OrderStaus = OrderStaus.Completed;
             unitOfWork.OrderRepository.Update(order);
@@ -141,7 +142,7 @@ namespace Shamane.Service.Implementation.Services
         public void Reject(string id, string rejectResoan)
         {
             var order = unitOfWork.OrderRepository.Get(id.ToGuid());
-            order.RegisterdBy = userService.GetUserId().ToGuid();
+            order.RegisterdBy = userService.GetCurrentUserId().ToGuid();
             order.RejectedDateTime = DateTime.Now;
             order.OrderStaus = OrderStaus.Rejected;
             order.RejectReason = rejectResoan;
@@ -152,7 +153,7 @@ namespace Shamane.Service.Implementation.Services
         public void SendToDelivery(string id)
         {
             var order = unitOfWork.OrderRepository.Get(id.ToGuid());
-            order.SendToDeliveryBy = userService.GetUserId().ToGuid();
+            order.SendToDeliveryBy = userService.GetCurrentUserId().ToGuid();
             order.SendToDelivertDateTime = DateTime.Now;
             order.OrderStaus = OrderStaus.SendToDelivery;
             unitOfWork.OrderRepository.Update(order);

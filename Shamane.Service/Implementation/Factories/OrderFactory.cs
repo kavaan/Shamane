@@ -1,5 +1,6 @@
 ﻿using Shamane.Common.Extensions;
 using Shamane.Domain;
+using Shamane.Service.Authentication.Service;
 using Shamane.Service.Definition.Dto;
 using Shamane.Service.Definition.Factories;
 using Shamane.Service.Implementation.Services;
@@ -37,7 +38,7 @@ namespace Shamane.Service.Implementation.Factories
                     orderDetail.CenterProductId = detial.CenterProductId.ToGuid();
                     orderDetail.Count = detial.Count;
                     orderDetail.CreatedAt = DateTime.Now;
-                    orderDetail.CreatedBy = userService.GetUserId().ToGuid();
+                    orderDetail.CreatedBy = userService.GetCurrentUserId().ToGuid();
                     details.Add(orderDetail);
                 }
                 result.OrderDetails = details;

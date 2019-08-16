@@ -17,6 +17,7 @@ namespace Shamane.DataAccess.MSSQL
         private IProductRepository productRepository;
         private ICenterProductRepository centerProductRepository;
         private IOrderRepository orderRepository;
+        private IUserRepository userRepository;
 
         public SqlUnitOfWork(ApplicationDbContext applicationDbContext)
         {
@@ -40,6 +41,8 @@ namespace Shamane.DataAccess.MSSQL
         public IOrderRepository OrderRepository => orderRepository ??
             (orderRepository = new OrderRepository(applicationDbContext));
 
+        public IUserRepository UserRepository => userRepository ??
+            (userRepository = new UserRepository(applicationDbContext));
 
         public void Dispose()
         {
