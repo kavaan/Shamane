@@ -1,4 +1,5 @@
-﻿using Shamane.Service.Definition.Dto;
+﻿using Shamane.Domain;
+using Shamane.Service.Definition.Dto;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,5 +23,6 @@ namespace Shamane.Service.Definition
         void DeleteCity(string id);
         void ActiveProvince(string id, bool status);
         void ActiveCity(string id, bool status);
+        bool IsCityExistsAndActive(string cityId);
     }
 }

@@ -98,15 +98,19 @@ namespace Shamane.Service.Authentication.Service
                             IsActive = true,
                             LastLoggedIn = null,
                             Password = _securityService.GetSha256Hash("k1374"),
-                            SerialNumber = Guid.NewGuid().ToString("N")
+                            SerialNumber = Guid.NewGuid().ToString("N"),
+                            CreatedBy = Guid.Empty,
+                            CreatedAt = DateTime.Now
                         };
                         context.Add(adminUser);
                         context.SaveChanges();
-
+                        //
+                        //
                         context.Add(new UserRole { Role = adminRole, User = adminUser });
                         context.Add(new UserRole { Role = userRole, User = adminUser });
                         context.SaveChanges();
                     }
+
                 }
             }
         }

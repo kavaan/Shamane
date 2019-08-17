@@ -16,7 +16,7 @@ namespace Shamane.Endpoint.Controllers
     [EnableCors("CorsPolicy")]
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+   // [Authorize]
     public class AddressesController : ControllerBase
     {
         private readonly IAddressService addressService;

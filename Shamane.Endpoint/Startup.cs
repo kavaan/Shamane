@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Security.Principal;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -18,6 +20,7 @@ using Newtonsoft.Json;
 using Shamane.DataAccess.MSSQL;
 using Shamane.DataAccess.MSSQL.Context;
 using Shamane.DataAccess.UnitOfWorks;
+using Shamane.Endpoint.ExceptionHandler;
 using Shamane.Endpoint.Models;
 using Shamane.Service.Authentication.Service;
 using Shamane.Service.Definition;
@@ -51,8 +54,8 @@ namespace Shamane.Endpoint
                     {
                         return bearerTokens.AccessTokenExpirationMinutes < bearerTokens.RefreshTokenExpirationMinutes;
                     }, "RefreshTokenExpirationMinutes is less than AccessTokenExpirationMinutes. Obtaining new tokens using the refresh token should happen only if the access token has expired.");
-                        services.AddOptions<ApiSettings>()
-                                .Bind(Configuration.GetSection("ApiSettings"));
+            services.AddOptions<ApiSettings>()
+                    .Bind(Configuration.GetSection("ApiSettings"));
 
 
             services.AddSwaggerGen(c =>
@@ -90,10 +93,8 @@ namespace Shamane.Endpoint
             services.AddScoped<ICenterProductService, CenterProductService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IOrderFactory, OrderFactory>();
-
-
-
-
+            services.AddTransient<IPrincipal>(
+                   provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IAntiForgeryCookieService, AntiForgeryCookieService>();
             services.AddScoped<IAuthenticationUnitOfWork, ApplicationDbContext>();
@@ -122,7 +123,7 @@ namespace Shamane.Endpoint
             {
                 options.AddPolicy(CustomRoles.Admin, policy => policy.RequireRole(CustomRoles.Admin));
                 options.AddPolicy(CustomRoles.User, policy => policy.RequireRole(CustomRoles.User));
-                options.AddPolicy(CustomRoles.Editor, policy => policy.RequireRole(CustomRoles.Editor));
+                options.AddPolicy(CustomRoles.CenterOwner, policy => policy.RequireRole(CustomRoles.CenterOwner));
             });
 
             // Needed for jwt auth.
@@ -208,7 +209,7 @@ namespace Shamane.Endpoint
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "صبحانه تا شام، با شامانه");
                 c.RoutePrefix = string.Empty;
             });
 
@@ -217,6 +218,7 @@ namespace Shamane.Endpoint
                 appBuilder.Use(async (context, next) =>
                 {
                     var error = context.Features[typeof(IExceptionHandlerFeature)] as IExceptionHandlerFeature;
+                    var error_ = context.Features[typeof(Exception)];
                     if (error != null && error.Error is SecurityTokenExpiredException)
                     {
                         context.Response.StatusCode = 401;
@@ -227,6 +229,18 @@ namespace Shamane.Endpoint
                             Msg = "token expired"
                         }));
                     }
+                    if (ExceptionManager.IsCustomException(error))
+                    {
+                        var exceptionInfo = ExceptionManager.GetInfo(error);
+                        context.Response.ContentType = "application/json";
+                        context.Response.StatusCode = exceptionInfo.StatusCode;
+                        await context.Response.WriteAsync(JsonConvert.SerializeObject(new
+                        {
+                            Type = exceptionInfo.ExceptionType.ToString(),
+                            State = exceptionInfo.StatusCode,
+                            Msg = exceptionInfo.Message
+                        }));
+                    }
                     else if (error != null && error.Error != null)
                     {
                         context.Response.StatusCode = 500;
@@ -234,7 +248,8 @@ namespace Shamane.Endpoint
                         await context.Response.WriteAsync(JsonConvert.SerializeObject(new
                         {
                             State = 500,
-                            Msg = error.Error.Message
+                            Msg = ExceptionDictionary.GetMessage(-1),
+                            Type = ExceptionType.UnHandeledException.ToString(),
                         }));
                     }
                     else

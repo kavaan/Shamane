@@ -5,13 +5,14 @@ using Shamane.Domain.Conts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 
 namespace Shamane.DataAccess.MSSQL.Repositories
 {
     public class CenterRepository : BaseRepository<Center>, ICenterRepository
     {
-        public CenterRepository(DbContext dbContext) : base(dbContext)
+        public CenterRepository(DbContext dbContext, IPrincipal principal) : base(dbContext, principal)
         {
         }
 

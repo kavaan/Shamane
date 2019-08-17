@@ -4,13 +4,14 @@ using Shamane.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 
 namespace Shamane.DataAccess.MSSQL.Repositories
 {
     public class CityRepository : BaseRepository<City>, ICityRepository
     {
-        public CityRepository(DbContext dbContext) : base(dbContext)
+        public CityRepository(DbContext dbContext, IPrincipal principal) : base(dbContext,principal)
         {
         }
 
@@ -25,5 +26,6 @@ namespace Shamane.DataAccess.MSSQL.Repositories
             var cities = set.Include("Province");
             return cities;
         }
+
     }
 }

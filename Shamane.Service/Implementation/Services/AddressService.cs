@@ -119,6 +119,19 @@ namespace Shamane.Service.Implementation.Services
             throw new NotImplementedException();
         }
 
+        public bool IsCityExistsAndActive(string cityId)
+        {
+            if (cityId.IsValidGuid())
+            {
+                var city = unitOfWork.CityRepository.Get(cityId.ToGuid());
+                if (city != null && city.IsActive == true)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public CityDto UpdateCity(CityDto cityDto)
         {
             throw new NotImplementedException();

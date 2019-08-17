@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Shamane.DataAccess.MSSQL.Migrations
 {
-    public partial class Init : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -90,7 +90,8 @@ namespace Shamane.DataAccess.MSSQL.Migrations
                     Lng = table.Column<long>(nullable: false),
                     AttachmentImage = table.Column<string>(nullable: true),
                     LogoImage = table.Column<string>(nullable: true),
-                    BannerImage = table.Column<string>(nullable: true)
+                    BannerImage = table.Column<string>(nullable: true),
+                    OwnerId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -108,10 +109,16 @@ namespace Shamane.DataAccess.MSSQL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    UpdatedAt = table.Column<DateTime>(nullable: true),
+                    CreatedBy = table.Column<Guid>(nullable: false),
+                    UpdateBy = table.Column<Guid>(nullable: true),
                     Username = table.Column<string>(maxLength: 450, nullable: false),
                     Password = table.Column<string>(nullable: false),
                     DisplayName = table.Column<string>(nullable: true),
                     IsActive = table.Column<bool>(nullable: false),
+                    DeactiveReson = table.Column<string>(nullable: true),
                     LastLoggedIn = table.Column<DateTimeOffset>(nullable: true),
                     SerialNumber = table.Column<string>(maxLength: 450, nullable: true),
                     Mobile = table.Column<string>(nullable: true),

@@ -25,6 +25,8 @@ namespace Shamane.Domain
         public string AttachmentImage { get; set; }
         public string LogoImage { get; set; }
         public string BannerImage { get; set; }
+        public Guid OwnerId { get; set; }
+
     }
     public enum CenterType
     {

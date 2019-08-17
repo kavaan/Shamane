@@ -5,13 +5,14 @@ using Shamane.Domain.Conts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 
 namespace Shamane.DataAccess.MSSQL.Repositories
 {
     public class OrderRepository : BaseRepository<Order>, IOrderRepository
     {
-        public OrderRepository(DbContext dbContext) : base(dbContext)
+        public OrderRepository(DbContext dbContext, IPrincipal principal) : base(dbContext,principal)
         {
         }
 

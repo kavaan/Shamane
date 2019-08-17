@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
@@ -19,6 +20,8 @@ namespace Shamane.Endpoint.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+    [EnableCors("CorsPolicy")]
     public class AccountsController : ControllerBase
     {
         private readonly IUserService _usersService;
@@ -50,13 +53,43 @@ namespace Shamane.Endpoint.Controllers
         }
 
         [HttpPost("")]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(UserRegisterDto user)
         {
             var result = await _usersService.Register(user);
             return Created("", result);
         }
 
+
+        [HttpPost("Ex")]
+        [AllowAnonymous]
+        public IActionResult Ex(int n)
+        {
+            switch (n)
+            {
+                case 0:
+                    return Ok();
+                case 1:
+                    throw new Exception();
+                case 2:
+                    throw new Exception("عدد نباید 2 باشد");
+                case 3:
+                    throw new NotImplementedException();
+                case 4:
+                    throw new NotImplementedException("این گزینه وجود ندارد");
+                case 5:
+                    throw new ArgumentException("مقدار ایکس باید عددی زیر 10 باشد");
+                case 6:
+                    throw new ArgumentNullException("مقدار ایکس وارد نشده است");
+                case 7:
+                    throw new ArgumentOutOfRangeException("موجودی کافی نیست");
+
+            }
+            return Ok();
+        }
+
         [HttpPost("[action]")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(UserLoginDto loginUser)
         {
             if (loginUser == null)
@@ -79,6 +112,7 @@ namespace Shamane.Endpoint.Controllers
         }
 
         [HttpPost("[action]")]
+        [AllowAnonymous]
         public async Task<IActionResult> RefreshToken(JToken jsonBody)
         {
             var refreshTokenValue = jsonBody.Value<string>("refreshToken");
@@ -118,6 +152,23 @@ namespace Shamane.Endpoint.Controllers
             return true;
         }
 
+        [HttpPut("ChangePassword")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDto passwordDto)
+        {
+            var user = await _usersService.GetCurrentUserAsync();
+            var result = await _usersService
+                .ChangePasswordAsync(user, passwordDto.OldPassword, passwordDto.NewPassword);
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(result.Error);
+            }
+        }
+
+
         [HttpGet("[action]"), HttpPost("[action]")]
         public bool IsAuthenticated()
         {
@@ -128,7 +179,21 @@ namespace Shamane.Endpoint.Controllers
         public IActionResult UserInfo()
         {
             var claimsIdentity = User.Identity as ClaimsIdentity;
-            return Ok(new { Username = claimsIdentity.Name });
+            var userId = claimsIdentity.Claims.Where(c =>
+                        c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)
+                        .Select(c => c.Value).SingleOrDefault();
+            var user = _usersService.GetProfile(userId);
+            return Ok(user);
+        }
+
+        [HttpPut("")]
+        public IActionResult UpdaeProfile(ProfileUpdateDto profile)
+        {
+            var claimsIdentity = User.Identity as ClaimsIdentity;
+            var userDataClaim = claimsIdentity?.FindFirst(ClaimTypes.UserData);
+            var _userId = userDataClaim?.Value;
+            var user = _usersService.UpdateProfile(_userId, profile);
+            return Ok(user);
         }
 
     }

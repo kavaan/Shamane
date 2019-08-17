@@ -4,13 +4,14 @@ using Shamane.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 
 namespace Shamane.DataAccess.MSSQL.Repositories
 {
     public class ProductRepository : BaseRepository<Product>, IProductRepository
     {
-        public ProductRepository(DbContext dbContext) : base(dbContext)
+        public ProductRepository(DbContext dbContext, IPrincipal principal) : base(dbContext,principal)
         {
         }
 

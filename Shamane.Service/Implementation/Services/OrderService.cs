@@ -59,7 +59,7 @@ namespace Shamane.Service.Implementation.Services
             orderEntity.OrderStaus = OrderStaus.NoState;
             if (orderEntity.TargetAddressIsUserProfileAddress)
             {
-                orderEntity.Address = userService.Get(userService.GetCurrentUserId()).Address;
+                orderEntity.Address =  userService.GetProfile(userService.GetCurrentUserId()).Address;
             }
             unitOfWork.OrderRepository.Add(orderEntity);
             unitOfWork.SaveChanges();

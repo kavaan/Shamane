@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,12 +33,6 @@ namespace Shamane.Service.Authentication.Service
 
         public async Task ValidateAsync(TokenValidatedContext context)
         {
-            var userPrincipal = context.Principal;
-            Thread.CurrentPrincipal = userPrincipal;
-            var identity = (System.Security.Claims.ClaimsPrincipal)System.Threading.Thread.CurrentPrincipal;
-            var principal = System.Threading.Thread.CurrentPrincipal as System.Security.Claims.ClaimsPrincipal;
-            var _userId = identity.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault();
-            Thread.SetData(Thread.GetNamedDataSlot("userId"), _userId);
 
             var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
             if (claimsIdentity?.Claims == null || !claimsIdentity.Claims.Any())

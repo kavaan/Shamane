@@ -10,8 +10,8 @@ using Shamane.DataAccess.MSSQL.Context;
 namespace Shamane.DataAccess.MSSQL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190815222852_Init")]
-    partial class Init
+    [Migration("20190816192528_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -59,6 +59,8 @@ namespace Shamane.DataAccess.MSSQL.Migrations
                     b.Property<string>("LogoImage");
 
                     b.Property<string>("Mail");
+
+                    b.Property<Guid>("OwnerId");
 
                     b.Property<int>("Priority");
 
@@ -329,6 +331,12 @@ namespace Shamane.DataAccess.MSSQL.Migrations
 
                     b.Property<Guid>("CityId");
 
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<Guid>("CreatedBy");
+
+                    b.Property<string>("DeactiveReson");
+
                     b.Property<string>("DisplayName");
 
                     b.Property<string>("Family");
@@ -336,6 +344,8 @@ namespace Shamane.DataAccess.MSSQL.Migrations
                     b.Property<string>("Image");
 
                     b.Property<bool>("IsActive");
+
+                    b.Property<bool>("IsDeleted");
 
                     b.Property<DateTimeOffset?>("LastLoggedIn");
 
@@ -348,6 +358,10 @@ namespace Shamane.DataAccess.MSSQL.Migrations
 
                     b.Property<string>("SerialNumber")
                         .HasMaxLength(450);
+
+                    b.Property<Guid?>("UpdateBy");
+
+                    b.Property<DateTime?>("UpdatedAt");
 
                     b.Property<string>("Username")
                         .IsRequired()

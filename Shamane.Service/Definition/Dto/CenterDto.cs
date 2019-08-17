@@ -31,6 +31,7 @@ namespace Shamane.Service.Definition.Dto
         public string AttachmentImage { get; set; }
         public string LogoImage { get; set; }
         public string BannerImage { get; set; }
+        public string OwnerId { get; set; }
 
     }
 }

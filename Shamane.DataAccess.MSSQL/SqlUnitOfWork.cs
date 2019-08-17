@@ -4,6 +4,8 @@ using Shamane.DataAccess.Repositories;
 using Shamane.DataAccess.UnitOfWorks;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 
 namespace Shamane.DataAccess.MSSQL
@@ -18,31 +20,33 @@ namespace Shamane.DataAccess.MSSQL
         private ICenterProductRepository centerProductRepository;
         private IOrderRepository orderRepository;
         private IUserRepository userRepository;
-
-        public SqlUnitOfWork(ApplicationDbContext applicationDbContext)
+        private readonly ClaimsPrincipal _principal;
+        public SqlUnitOfWork(ApplicationDbContext applicationDbContext, IPrincipal principal)
         {
             this.applicationDbContext = applicationDbContext;
+            _principal = principal as ClaimsPrincipal;
+
         }
         public ICenterRepository CenterRepository => centerRepository ??
-            (centerRepository = new CenterRepository(applicationDbContext));
+            (centerRepository = new CenterRepository(applicationDbContext,_principal));
 
         public IProvinceRepository ProvinceRepository => provinceRepository ??
-            (provinceRepository = new ProvinceRepository(applicationDbContext));
+            (provinceRepository = new ProvinceRepository(applicationDbContext, _principal));
 
         public ICityRepository CityRepository => cityRepository ??
-            (cityRepository = new CityRepository(applicationDbContext));
+            (cityRepository = new CityRepository(applicationDbContext, _principal));
 
         public IProductRepository ProductRepository => productRepository ??
-            (productRepository = new ProductRepository(applicationDbContext));
+            (productRepository = new ProductRepository(applicationDbContext, _principal));
 
         public ICenterProductRepository CenterProductRepository => centerProductRepository ??
-            (centerProductRepository = new CenterProductRepository(applicationDbContext));
+            (centerProductRepository = new CenterProductRepository(applicationDbContext, _principal));
 
         public IOrderRepository OrderRepository => orderRepository ??
-            (orderRepository = new OrderRepository(applicationDbContext));
+            (orderRepository = new OrderRepository(applicationDbContext, _principal));
 
         public IUserRepository UserRepository => userRepository ??
-            (userRepository = new UserRepository(applicationDbContext));
+            (userRepository = new UserRepository(applicationDbContext, _principal));
 
         public void Dispose()
         {

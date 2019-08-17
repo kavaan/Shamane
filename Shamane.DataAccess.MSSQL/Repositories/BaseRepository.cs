@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Shamane.DataAccess.Repositories;
 using Shamane.Domain;
+using Shamane.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,12 @@ namespace Shamane.DataAccess.MSSQL.Repositories
     {
         protected DbSet<Entity> set;
         protected DbContext dbContext;
-        //private readonly ClaimsPrincipal _principal;
+        private readonly ClaimsPrincipal _principal;
 
-        public BaseRepository(DbContext dbContext)
+        public BaseRepository(DbContext dbContext,
+            IPrincipal principal)
         {
+            _principal = principal as ClaimsPrincipal;
             set = dbContext.Set<Entity>();
             this.dbContext = dbContext;
         }
@@ -39,7 +42,8 @@ namespace Shamane.DataAccess.MSSQL.Repositories
 
         public virtual Entity Get(Guid id)
         {
-            return set.First(x => ((IBaseEntity)x).Id == id);
+            var result = set.FirstOrDefault(x => ((IBaseEntity)x).Id == id);
+            return result;
         }
 
         public virtual IQueryable<Entity> Get(Expression<Func<Entity, bool>> expression)
@@ -63,11 +67,9 @@ namespace Shamane.DataAccess.MSSQL.Repositories
 
         public Guid GetUserId()
         {
-            var threadUserId = Thread.GetData(Thread.GetNamedDataSlot("userId"));
-            var currentPrincipal = Thread.CurrentPrincipal;
-            var identity = (System.Security.Claims.ClaimsPrincipal)System.Threading.Thread.CurrentPrincipal;
-            var principal = System.Threading.Thread.CurrentPrincipal as System.Security.Claims.ClaimsPrincipal;
-            var userId = identity.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier).Select(c => c.Value).SingleOrDefault();
+            var userId = _principal.Claims.Where(c =>
+                        c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)
+                        .Select(c => c.Value).SingleOrDefault();
             return Guid.Parse(userId);
         }
     }

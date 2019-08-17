@@ -17,6 +17,7 @@ namespace Shamane.Service.Definition
             DeliveryType deliveryType = DeliveryType.Null,
             CenterOrderBy centerOrderBy = CenterOrderBy.Null,
             int? from = 0, int? count = 20);
-        CenterDto Get(Guid id);
+        CenterDto Get(string id);
+        CenterDto Update(string id, CenterDto centerDto);
     }
 }

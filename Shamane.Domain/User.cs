@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Shamane.Domain
 {
-    public class User
+    public class User : BaseEntity
     {
         public User()
         {
@@ -12,7 +12,6 @@ namespace Shamane.Domain
             UserTokens = new HashSet<UserToken>();
         }
 
-        public Guid Id { get; set; }
 
         public string Username { get; set; }
 
@@ -21,6 +20,7 @@ namespace Shamane.Domain
         public string DisplayName { get; set; }
 
         public bool IsActive { get; set; }
+        public string DeactiveReson { get; set; }
 
         public DateTimeOffset? LastLoggedIn { get; set; }
 
@@ -45,5 +45,6 @@ namespace Shamane.Domain
         public string Name { get; set; }
         public string Family { get; set; }
         public string Image { get; set; }
+
     }
 }

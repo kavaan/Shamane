@@ -60,7 +60,7 @@ namespace Shamane.Service.Implementation.Services
 
         public CenterProductTreeDto GetTrees(string centerId)
         {
-            var centerDto = centerService.Get(centerId.ToGuid());
+            var centerDto = centerService.Get(centerId);
             var result = new CenterProductTreeDto()
             {
                 CenterId = centerId,
